@@ -1,0 +1,8 @@
+
+package ABSTRACCION;
+
+
+public  abstract class Animal extends SerVivo {
+    
+    
+}

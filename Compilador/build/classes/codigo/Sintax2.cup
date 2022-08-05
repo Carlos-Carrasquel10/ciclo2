@@ -1,0 +1,105 @@
+package codigo;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal Linea, Comillas, T_dato, Int, Cadena, XOR, NOT, Cadena, If, Else, Do, While, Printf, For,
+    Igual, Suma, Resta, Multiplicacion, Division, Modulo, Op_logico, Op_incremento, Op_relacional, Especificadores,
+    Op_atribucion, Op_booleano, Null, Parentesis_a, Parentesis_c,
+    Llave_a, Llave_c, Corchete_a, Corchete_c, Main, Return, Void, P_coma, Dos_puntos, Switch, Caso, Break, Defecto, Identificador, Texto
+    Numero, ERROR, Comillas_simple;
+non terminal INICIO, SENTENCIA, DECLARACION, DECLARACION_FOR, IF,
+    WHILE, DO_WHILE, FOR, SENTENCIA_BOOLEANA, SENTENCIA_FOR, SENTENCIA_SWITCH, SWITCH;
+
+start with INICIO;
+
+INICIO ::= 
+    Int Main Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c |
+    Main Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c
+;
+SENTENCIA ::= 
+    SENTENCIA DECLARACION |
+    DECLARACION |
+    SENTENCIA IF | 
+    IF |
+    SENTENCIA WHILE |
+    WHILE |
+    SENTENCIA DO_WHILE
+    DO_WHILE |
+    SENTENCIA FOR |
+    FOR |
+    SENTENCIA SWITCH |
+    SWITCH
+;
+DECLARACION ::= 
+    Int Identificador P_coma | 
+    Int Identificador Op_atribucion Numero P_coma |
+    Int Identificador Igual Numero P_coma |
+    Int Identificador Op_incremento P_coma | 
+    Int Op_incremento Identificador P_coma | 
+    T_dato Identificador P_coma | 
+    T_dato Identificador Op_atribucion Numero P_coma |
+    T_dato Identificador Igual Numero P_coma |
+    T_dato Identificador Op_incremento P_coma | 
+    T_dato Op_incremento Identificador P_coma | 
+    Cadena Identificador Op_atribucion Comillas Comillas P_coma |
+    Cadena Identificador Igual Comillas Comillas P_coma |
+    Cadena Identificador Op_atribucion Comillas Identificador Comillas P_coma |
+    Cadena Identificador Igual Comillas Identificador Comillas P_coma |
+    Printf Parentesis_a Parentesis_c P_coma |
+    Printf Parentesis_a Comillas Parentesis_c P_coma |
+    Printf Parentesis_a Comillas Comillas Parentesis_c P_coma |
+    Printf Parentesis_a Texto Parentesis_c P_coma |
+    Printf Parentesis_a Identificador Parentesis_c P_coma |
+    Printf Parentesis_a Numero Parentesis_c P_coma |
+    Printf Parentesis_a Numero Op_logico Numero Parentesis_c P_coma |
+    Printf Parentesis_a NOT Numero Parentesis_c P_coma |
+    Printf Parentesis_a Numero XOR Numero Identificador Parentesis_c P_coma |
+    Printf Parentesis_a Numero Op_relacional Numero Parentesis_c P_coma |
+    Printf Parentesis_a Op_logico Numero Op_logico Numero Parentesis_c P_coma |
+    Printf Parentesis_a Numero Op_logico Numero Parentesis_c P_coma |
+    Printf Parentesis_a Texto Parentesis_c P_coma
+;
+IF ::= If Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c |
+       If Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c Else Llave_a SENTENCIA Llave_c
+;
+SENTENCIA_BOOLEANA ::= 
+    Op_booleano | 
+    Identificador Op_relacional Op_booleano |
+    Identificador Op_relacional Numero |
+    Identificador Op_relacional Identificador |
+    Identificador Op_relacional Comillas Comillas |
+    Identificador Op_relacional Comillas Identificador Comillas
+;
+WHILE ::= While Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c
+;
+DO_WHILE ::= Do Llave_a SENTENCIA Llave_c While Parentesis_a SENTENCIA_BOOLEANA Parentesis_c P_coma
+;
+FOR ::= For Parentesis_a SENTENCIA_FOR Parentesis_c Llave_a SENTENCIA Llave_c
+;
+SENTENCIA_FOR ::=
+    T_dato Identificador Igual Numero P_coma SENTENCIA_BOOLEANA P_coma DECLARACION_FOR |
+    Identificador Igual Numero P_coma SENTENCIA_BOOLEANA P_coma DECLARACION_FOR
+;
+DECLARACION_FOR ::= 
+    Identificador Op_atribucion Numero |
+    Identificador Op_incremento | 
+    Op_incremento Identificador
+;
+
+SWITCH ::= Switch Parentesis_a Identficador Parentesis_c Llave_a Caso Dos_puntos SENTENCIA Break P_coma Llave_c |
+           Switch Parentesis_a Identficador Parentesis_c Llave_a Caso Dos_puntos SENTENCIA Break P_coma Defecto Dos_puntos SENTENCIA Llave_c |
+           Switch Parentesis_a Numero Parentesis_c Llave_a Caso Dos_puntos SENTENCIA Break P_coma Llave_c |
+           Switch Parentesis_a Numero Parentesis_c Llave_a Caso Dos_puntos SENTENCIA Break P_coma Defecto Dos_puntos SENTENCIA Llave_c

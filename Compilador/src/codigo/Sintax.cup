@@ -1,0 +1,59 @@
+package codigo;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal Identificador, Texto,
+    Texto2,
+    Numero,
+For,
+If ,
+Else,
+Elseif,
+Comentar,
+Comillas ,
+Retorno,
+Entrada,
+Salida,
+Suma,
+Resta,
+Division,
+Multiplicacion,
+Igual,
+MayorQue,
+MenorQue,
+diferencia,
+P_Coma,
+String,
+Int,
+Decimal,
+ERROR;
+
+non terminal INICIO, SENTENCIA, IF;
+
+start with INICIO;
+
+INICIO ::= 
+    SENTENCIA
+;
+
+SENTENCIA ::= 
+    SENTENCIA IF | 
+    IF |
+;
+
+IF ::= 
+    If Identificador
+;

@@ -1,0 +1,122 @@
+package codigo;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal Linea, Comillas, Comillas_simple, Comas, Texto2, T_dato, XOR, NOT, If, Casetr, Else, Do, While, Printf, For, Igual, Suma, Resta, Multiplicacion, Division, Modulo, Op_logico, Op_relacional, Especificadores, Op_atribucion, Op_incremento, Op_booleano, Null, Parentesis_a, Parentesis_c, Llave_a, Llave_c, Corchete_a,  Corchete_c, Main,  Return, Void, P_coma, Dos_puntos,  Switch,  Caso,  Break,  Defecto, Identificador, Texto,  Numero,  ERROR;
+non terminal INICIO, SENTENCIA, DECLARACION, DECLARACION_FOR, IF, IF_ELSE, CASETR,
+    WHILE, DO_WHILE, FOR, SENTENCIA_BOOLEANA, SENTENCIA_FOR, SWITCH, SWITCH_CASE, TEXTOS, SENTENCIA_PRINTF, OP_RELACIONAL, OPERADORES, OP_ARITMETICAS;
+
+start with INICIO;
+
+INICIO ::= 
+    T_dato Main Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c |
+    Main Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c
+;
+
+SENTENCIA ::= 
+    SENTENCIA DECLARACION |
+    DECLARACION |
+    SENTENCIA IF | 
+    IF |
+    SENTENCIA IF_ELSE |
+    IF_ELSE |
+    SENTENCIA WHILE |
+    WHILE |
+    SENTENCIA DO_WHILE
+    DO_WHILE |
+    SENTENCIA FOR |
+    FOR |
+    SWITCH |
+    SWITCH_CASE |
+    SENTENCIA SWITCH |
+    SENTENCIA SWITCH_CASE |
+    SENTENCIA_PRINTF |
+    SENTENCIA SENTENCIA_PRINTF |
+    SENTENCIA OP_ARITMETICAS |
+    OP_ARITMETICAS |
+    SENTENCIA CASETR |
+    CASETR
+;
+OP_ARITMETICAS ::=
+    Numero OPERADORES Numero |
+    Identificador OPERADORES Numero |
+    Numero OPERADORES Identificador |
+    Identificador OPERADORES Identificador 
+;
+OPERADORES ::=
+    Suma |
+    Resta |
+    Multiplicacion |
+    Division |
+    Modulo
+;
+OP_RELACIONAL ::=
+    Numero Op_relacional Numero |
+    Identificador Op_relacional Numero |
+    Numero Op_relacional Identificador |
+    Identificador Op_relacional Identificador |
+    TEXTOS Op_relacional TEXTOS
+;
+SENTENCIA_PRINTF ::=
+    Printf Parentesis_a Parentesis_c P_coma |
+    Printf Parentesis_a TEXTOS Parentesis_c P_coma |
+    Printf Parentesis_a Identificador Parentesis_c P_coma |
+    Printf Parentesis_a Numero Parentesis_c P_coma |
+    Printf Parentesis_a OP_RELACIONAL Parentesis_c P_coma |
+    Printf Parentesis_a OP_ARITMETICAS Parentesis_c P_coma 
+;
+TEXTOS ::= 
+   Comillas Comillas | 
+   Comillas_simple Comillas_simple|
+   Texto|
+   Texto2
+;
+DECLARACION ::= 
+    T_dato Identificador P_coma | 
+    T_dato Identificador Op_atribucion Numero P_coma |
+    T_dato Identificador Igual Numero P_coma |
+    T_dato Identificador Op_incremento P_coma | 
+    T_dato Op_incremento Identificador P_coma 
+;
+IF ::= 
+    If Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c | 
+    If Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a Llave_c  
+;
+SENTENCIA_BOOLEANA ::= 
+    Op_booleano | 
+    OP_RELACIONAL | 
+    OP_RELACIONAL Op_logico OP_RELACIONAL 
+;
+IF_ELSE ::= If Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c Else Llave_a SENTENCIA Llave_c
+;
+WHILE ::= While Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c
+;
+DO_WHILE ::= Do Llave_a SENTENCIA Llave_c While Parentesis_a SENTENCIA_BOOLEANA Parentesis_c P_coma
+;
+FOR ::= For Parentesis_a SENTENCIA_FOR Parentesis_c Llave_a SENTENCIA Llave_c
+;
+SENTENCIA_FOR ::=
+    T_dato Identificador Igual Numero P_coma SENTENCIA_BOOLEANA P_coma DECLARACION_FOR |
+    Identificador Igual Numero P_coma SENTENCIA_BOOLEANA P_coma DECLARACION_FOR
+;
+DECLARACION_FOR ::= 
+    Identificador Op_atribucion Numero |
+    Identificador Op_incremento | 
+    Op_incremento Identificador
+;
+CASETR ::= 
+    Casetr Parentesis_a SENTENCIA_BOOLEANA Parentesis_c 
+;
